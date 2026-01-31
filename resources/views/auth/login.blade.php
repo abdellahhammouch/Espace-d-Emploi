@@ -1,47 +1,86 @@
 <x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    @php($title = 'Sign In')
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+    <div class="w-full max-w-[440px]">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl shadow-slate-200/50 dark:shadow-none border border-slate-200 dark:border-slate-800 p-8 lg:p-10">
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+            <div class="flex flex-col gap-2 mb-8">
+                <h1 class="text-3xl font-black text-navy-deep dark:text-white tracking-tight">Welcome back</h1>
+                <p class="text-slate-500 dark:text-slate-400">Please enter your details to sign in.</p>
+            </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
+            {{-- Status message (ex: reset password link sent) --}}
+            @if (session('status'))
+                <div class="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-800 px-4 py-3 text-sm">
+                    {{ session('status') }}
+                </div>
             @endif
 
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
+            {{-- Global errors --}}
+            @if ($errors->any())
+                <div class="mb-4 rounded-lg border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm">
+                    <ul class="list-disc pl-5">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('login') }}" class="flex flex-col gap-5">
+                @csrf
+
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Professional Email</label>
+                    <input
+                        name="email"
+                        value="{{ old('email') }}"
+                        class="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg h-12 px-4 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                        placeholder="name@company.com"
+                        required
+                        autofocus
+                        type="email"
+                        autocomplete="username"
+                    />
+                </div>
+
+                <div class="flex flex-col gap-1.5 relative">
+                    <div class="flex justify-between items-center">
+                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Password</label>
+
+                        @if (Route::has('password.request'))
+                            <a class="text-xs text-primary font-bold hover:underline" href="{{ route('password.request') }}">
+                                Forgot password?
+                            </a>
+                        @endif
+                    </div>
+
+                    <input
+                        name="password"
+                        class="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg h-12 px-4 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                        placeholder="••••••••"
+                        required
+                        type="password"
+                        autocomplete="current-password"
+                    />
+                </div>
+                <button class="bg-primary text-white font-bold h-12 rounded-lg hover:bg-blue-700 transition-all shadow-lg shadow-primary/20 active:scale-[0.98] mt-2" type="submit">
+                    Sign In
+                </button>
+            </form>
+
+            <div class="mt-10 pt-8 border-t border-slate-100 dark:border-slate-800 text-center">
+                <p class="text-sm text-slate-500">
+                    Don't have an account?
+                    <a class="text-primary font-bold hover:underline" href="{{ route('register') }}">Create an account</a>
+                </p>
+            </div>
         </div>
-    </form>
+
+        <div class="mt-8 flex justify-center gap-6">
+            <a class="text-xs font-medium text-slate-400 hover:text-slate-600 transition-colors" href="#">Privacy Policy</a>
+            <a class="text-xs font-medium text-slate-400 hover:text-slate-600 transition-colors" href="#">Terms of Service</a>
+            <a class="text-xs font-medium text-slate-400 hover:text-slate-600 transition-colors" href="#">Help Center</a>
+        </div>
+    </div>
 </x-guest-layout>
