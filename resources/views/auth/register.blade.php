@@ -26,7 +26,7 @@
                 I am a Recruiter
             </button>
             <button type="button"
-                    data-value="job_seeker"
+                    data-value="employee"
                     class="flex-1 py-2.5 text-sm font-bold rounded-lg transition-all text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200">
                 I am a Job Seeker
             </button>
@@ -36,8 +36,7 @@
             @csrf
 
             {{-- IMPORTANT: si tu veux ENREGISTRER ce champ, il faut l’ajouter côté validation + DB --}}
-            <input type="hidden" name="account_type" id="account_type" value="recruiter"/>
-
+            <input type="hidden" name="role" id="role" value="recruiter"/>
             <div class="flex flex-col gap-1.5">
                 <label class="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Full Name</label>
                 <div class="relative">
@@ -69,7 +68,43 @@
                     />
                 </div>
             </div>
+            {{-- Speciality (only for employee/job seeker) --}}
+            <div id="employeeFields" class="flex flex-col gap-1.5 hidden">
+                <label class="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Speciality</label>
+                <div class="relative">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl">work</span>
+                    <input
+                        id="speciality"
+                        name="speciality"
+                        value="{{ old('speciality') }}"
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-xl h-12 pl-12 pr-4 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                        placeholder="Ex: Laravel, Comptabilité, Marketing..."
+                        type="text"
+                        autocomplete="organization-title"
+                    />
+                </div>
 
+                {{-- si tu veux afficher l’erreur de validation de ce champ --}}
+                <x-input-error :messages="$errors->get('speciality')" class="mt-2" />
+            </div>
+            {{-- Company Name (only for recruiter) --}}
+            <div id="recruiterFields" class="flex flex-col gap-1.5">
+                <label class="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Company Name</label>
+                <div class="relative">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl">business</span>
+                    <input
+                        id="company_name"
+                        name="company_name"
+                        value="{{ old('company_name') }}"
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-xl h-12 pl-12 pr-4 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                        placeholder="Ex: Google, OCP, Capgemini..."
+                        type="text"
+                        autocomplete="organization"
+                    />
+                </div>
+
+                <x-input-error :messages="$errors->get('company_name')" class="mt-2" />
+            </div>
             <div class="flex flex-col gap-1.5">
                 <label class="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Password</label>
                 <div class="relative">
@@ -129,11 +164,26 @@
             const wrap = document.getElementById('typeToggle');
             if (!wrap) return;
 
-            const hidden = document.getElementById('account_type');
+            const hidden = document.getElementById('role');
+            const recruiterFields = document.getElementById('recruiterFields');
+            const companyInput = document.getElementById('company_name');
             const buttons = wrap.querySelectorAll('button[data-value]');
 
             function setActive(value) {
                 hidden.value = value;
+                const employeeFields = document.getElementById('employeeFields');
+                const specialityInput = document.getElementById('speciality');
+                const isRecruiter = (value === 'recruiter');
+
+                if (recruiterFields) recruiterFields.classList.toggle('hidden', !isRecruiter);
+                if (companyInput) companyInput.required = isRecruiter;
+
+                const isEmployee = (value === 'employee');
+
+                if (employeeFields) employeeFields.classList.toggle('hidden', !isEmployee);
+
+                // rendre "speciality" obligatoire seulement si employee
+                if (specialityInput) specialityInput.required = isEmployee;
                 buttons.forEach(btn => {
                     const isActive = btn.dataset.value === value;
                     btn.classList.toggle('bg-white', isActive);
