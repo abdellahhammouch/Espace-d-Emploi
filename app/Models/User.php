@@ -10,6 +10,8 @@ use Spatie\Permission\Traits\HasRoles;
 use App\Models\EmployeeProfile;
 use App\Models\RecruiterProfile;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 
 class User extends Authenticatable
 {
@@ -60,5 +62,13 @@ class User extends Authenticatable
     public function recruiterProfile()
     {
         return $this->hasOne(RecruiterProfile::class);
+    }
+    public function jobOffers(): HasMany
+    {
+        return $this->hasMany(\App\Models\JobOffer::class, 'recruiter_id');
+    }
+    public function applications(): HasMany
+    {
+        return $this->hasMany(\App\Models\Application::class, 'employee_id');
     }
 }

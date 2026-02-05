@@ -17,10 +17,7 @@ class EducationController extends Controller
             'end_year'   => ['nullable','integer','min:1900','max:2100'],
         ]);
 
-        $profile = $request->user()->employeeProfile()->firstOrCreate([
-            'user_id' => $request->user()->id,
-        ]);
-
+        $profile = $request->user()->employeeProfile()->firstOrCreate(['user_id' => $request->user()->id]);
         $profile->educations()->create($data);
 
         return back()->with('status', 'education-added');
