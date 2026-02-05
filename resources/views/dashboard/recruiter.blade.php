@@ -31,7 +31,7 @@
             </a>
         </div>
 
-        {{-- ✅ Livewire Search (Dashboard) --}}
+        {{-- Livewire Search (Dashboard) --}}
         <section class="bg-transparent">
             <livewire:dashboard-user-search />
         </section>

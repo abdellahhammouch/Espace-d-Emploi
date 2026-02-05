@@ -31,6 +31,10 @@
                 <span class="material-symbols-outlined text-[20px]">search</span>
                 Recherche
             </a>
+            <a href="{{ route('dashboard') }}"
+               class="text-sm font-semibold {{ request()->routeIs('dashboard') ? 'text-primary' : 'text-[#111418]' }} hover:text-primary transition">
+                Dashboard
+            </a>
             <a href="{{ route('connections.index') }}" class="text-sm font-bold hover:text-primary">
                 Network
             </a>

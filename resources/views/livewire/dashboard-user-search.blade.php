@@ -86,7 +86,7 @@
 
             <div class="pt-2">
                 <a class="text-primary text-sm font-semibold hover:underline"
-                   href="{{ route('users.search', ['q' => trim($q)]) }}">
+                   href="{{ route('search.index', ['q' => trim($q)]) }}"
                     Voir tous les résultats →
                 </a>
             </div>

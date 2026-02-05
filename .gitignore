@@ -22,10 +22,6 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
-# Laravel / App
-.env
-.env.* 
-!.env.example
 
 # Composer
 /vendor

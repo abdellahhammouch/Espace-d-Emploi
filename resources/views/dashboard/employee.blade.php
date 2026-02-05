@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        Bonjour, {{ auth()->user()->name }} 👋
+        Bonjour, {{ auth()->user()->name }}
     </x-slot>
 
     @php

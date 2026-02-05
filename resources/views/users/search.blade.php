@@ -5,7 +5,7 @@
             <p class="text-[#617589]">Find and connect with professionals</p>
         </div>
 
-        <form method="GET" action="{{ route('users.search') }}" class="w-full">
+        <form method="GET" action="{{ route('search.index') }}" class="w-full">
             <div class="relative flex items-center h-14 bg-white rounded-2xl border border-[#e5e7eb]">
                 <span class="material-symbols-outlined absolute left-5 text-[#617589] text-[28px]">search</span>
                 <input name="q" value="{{ $q }}" class="w-full h-full pl-14 pr-32 rounded-2xl text-lg bg-transparent border-none focus:ring-2 focus:ring-primary/30 placeholder:text-[#617589]" placeholder="Search by name, specialty, or company...">
