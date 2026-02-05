@@ -22,3 +22,45 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+# Laravel / App
+.env
+.env.* 
+!.env.example
+
+# Composer
+/vendor
+
+# Node
+/node_modules
+/public/build
+/public/hot
+
+# Storage (uploads, cache…)
+public/storage
+/storage/*.key
+/storage/app/public
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/logs/*
+
+# Cache / compiled
+/bootstrap/cache/*
+!bootstrap/cache/.gitignore
+
+# Tests / coverage
+/coverage
+.phpunit.result.cache
+
+# IDE / OS
+.idea
+.vscode
+*.swp
+.DS_Store
+
+# Logs
+*.log
+
+# SQLite (si jamais)
+*.sqlite
+*.sqlite-journal
