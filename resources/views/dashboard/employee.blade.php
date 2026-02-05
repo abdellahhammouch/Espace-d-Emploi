@@ -1,150 +1,73 @@
-@php
-    $user = auth()->user();
+<x-app-layout>
+    <x-slot name="header">
+        Bonjour, {{ auth()->user()->name }} 👋
+    </x-slot>
 
-    // Avatar : si tu as avatar_path en storage, sinon un avatar par défaut
-    $avatarUrl = $user->avatar_path
-        ? \Illuminate\Support\Facades\Storage::url($user->avatar_path)
-        : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=137fec&color=ffffff&bold=true';
-@endphp
+    @php
+        $me = auth()->user();
+        $openOffers = \App\Models\JobOffer::where('is_closed', false)->count();
+        $myApps = \App\Models\Application::where('employee_id', $me->id)->count();
 
-<!DOCTYPE html>
-<html class="light" lang="en">
-<head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Job Board Dashboard</title>
+        $latestOffers = \App\Models\JobOffer::query()
+            ->with(['recruiter.recruiterProfile', 'contractType'])
+            ->where('is_closed', false)
+            ->latest()
+            ->limit(6)
+            ->get();
+    @endphp
 
-    <!-- Tailwind CSS (CDN) -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <div class="space-y-6">
+        {{-- Stats --}}
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white rounded-2xl border border-[#f0f2f4] p-5 shadow-soft">
+                <p class="text-xs font-bold text-muted uppercase tracking-wider">Offres ouvertes</p>
+                <p class="mt-2 text-3xl font-black">{{ $openOffers }}</p>
+            </div>
+            <div class="bg-white rounded-2xl border border-[#f0f2f4] p-5 shadow-soft">
+                <p class="text-xs font-bold text-muted uppercase tracking-wider">Mes candidatures</p>
+                <p class="mt-2 text-3xl font-black">{{ $myApps }}</p>
+            </div>
+            <a href="{{ route('profile.edit', ['tab' => 'cv']) }}"
+               class="bg-white rounded-2xl border border-[#f0f2f4] p-5 shadow-soft hover:border-primary/30 transition">
+                <p class="text-xs font-bold text-muted uppercase tracking-wider">Améliorer mon CV</p>
+                <p class="mt-2 text-sm text-muted">Ajoute tes expériences et formations.</p>
+                <p class="mt-3 inline-flex text-primary font-bold text-sm">Aller au CV →</p>
+            </a>
+        </section>
 
-    <!-- Material Symbols -->
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+        {{-- Latest offers --}}
+        <section class="bg-white rounded-2xl border border-[#f0f2f4] shadow-soft overflow-hidden">
+            <div class="p-5 flex items-center justify-between border-b border-[#f0f2f4]">
+                <h2 class="font-extrabold text-ink">Offres récentes</h2>
+                <a class="text-sm font-bold text-primary hover:underline" href="{{ route('offers.index') }}">Voir tout</a>
+            </div>
 
-    <!-- Google Fonts: Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+            <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+                @forelse($latestOffers as $offer)
+                    @php
+                        $company = optional($offer->recruiter->recruiterProfile)->company_name ?? 'Entreprise';
+                    @endphp
 
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#137fec",
-                        "background-light": "#f6f7f8",
-                        "background-dark": "#101922",
-                    },
-                    fontFamily: {
-                        "display": ["Inter", "sans-serif"]
-                    },
-                    borderRadius: {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
-                    },
-                },
-            },
-        }
-    </script>
-
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-    </style>
-</head>
-
-<body class="bg-background-light dark:bg-background-dark font-display text-[#111418] dark:text-white transition-colors duration-200">
-
-<!-- Top Navigation Bar -->
-<x-recruitconnect-layout>
-
-<main class="max-w-[1200px] mx-auto pb-20">
-
-    <!-- Headline -->
-    <div class="pt-10 pb-4">
-        <h1 class="text-[#111418] dark:text-white tracking-tight text-[32px] font-extrabold leading-tight px-4 text-center">
-            Discover your next career move
-        </h1>
-        <p class="text-center text-gray-500 dark:text-gray-400 mt-2">Explore 1,200+ new opportunities across the globe</p>
+                    <a href="{{ route('offers.show', $offer) }}"
+                       class="group rounded-2xl border border-[#f0f2f4] hover:border-primary/30 bg-background-light/40 p-4 transition">
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="min-w-0">
+                                <p class="font-extrabold text-ink truncate">{{ $offer->title }}</p>
+                                <p class="text-sm text-muted truncate">{{ $company }} • {{ $offer->place }}</p>
+                            </div>
+                            <span class="shrink-0 px-3 py-1 rounded-full text-xs font-bold bg-primary/10 text-primary">
+                                {{ $offer->contractType?->name }}
+                            </span>
+                        </div>
+                        <p class="mt-3 text-sm text-muted line-clamp-2">
+                            {{ \Illuminate\Support\Str::limit($offer->description, 120) }}
+                        </p>
+                        <p class="mt-3 text-sm font-bold text-primary">Voir l’offre →</p>
+                    </a>
+                @empty
+                    <div class="text-sm text-muted">Aucune offre pour le moment.</div>
+                @endforelse
+            </div>
+        </section>
     </div>
-
-    <!-- Search Bar -->
-    <div class="px-4 py-6 max-w-[800px] mx-auto">
-        <div class="bg-white dark:bg-[#1a242f] p-2 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex items-center gap-2">
-            <div class="flex-1 flex items-center px-4">
-                <span class="material-symbols-outlined text-gray-400">search</span>
-                <input class="w-full border-none bg-transparent focus:ring-0 text-[#111418] dark:text-white placeholder:text-gray-400 text-base py-3 px-2"
-                       placeholder="Job title, keywords, or company..."
-                       value=""/>
-            </div>
-            <div class="hidden sm:flex items-center px-4 border-l border-gray-200 dark:border-gray-700">
-                <span class="material-symbols-outlined text-gray-400">location_on</span>
-                <input class="w-32 border-none bg-transparent focus:ring-0 text-[#111418] dark:text-white placeholder:text-gray-400 text-base py-3 px-2"
-                       placeholder="Remote"
-                       value=""/>
-            </div>
-            <button class="bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-8 rounded-lg transition-all">
-                Search
-            </button>
-        </div>
-    </div>
-
-    <!-- Filter Chips -->
-    <div class="px-4 mb-8">
-        <div class="flex gap-3 justify-center flex-wrap">
-            <div class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-primary text-white px-5 cursor-pointer">
-                <p class="text-sm font-semibold">All Jobs</p>
-            </div>
-            <div class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white dark:bg-[#1a242f] border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 px-5 cursor-pointer hover:border-primary transition-colors">
-                <p class="text-sm font-medium">CDI (Full-time)</p>
-            </div>
-            <div class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white dark:bg-[#1a242f] border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 px-5 cursor-pointer hover:border-primary transition-colors">
-                <p class="text-sm font-medium">Freelance</p>
-            </div>
-            <div class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white dark:bg-[#1a242f] border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 px-5 cursor-pointer hover:border-primary transition-colors">
-                <p class="text-sm font-medium">Remote Only</p>
-            </div>
-            <div class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white dark:bg-[#1a242f] border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 px-5 cursor-pointer hover:border-primary transition-colors">
-                <p class="text-sm font-medium">Internship</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Job Grid -->
-    <div class="px-4">
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Colle ici le reste de tes Job Cards tel quel (aucune modif obligatoire) -->
-        </div>
-
-        <!-- Loading Indicator -->
-        <div class="mt-12 flex flex-col items-center justify-center gap-4">
-            <div class="size-8 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
-            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Fetching more dream jobs...</p>
-        </div>
-    </div>
-</main>
-
-<footer class="bg-white dark:bg-[#1a242f] py-10 border-t border-[#f0f2f4] dark:border-[#2d3748]">
-    <div class="max-w-[1200px] mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-6">
-        <div class="flex items-center gap-2 text-primary opacity-60 grayscale">
-            <div class="size-6">
-                <svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z"></path>
-                </svg>
-            </div>
-            <span class="font-bold text-sm">HireFlow © 2024</span>
-        </div>
-        <div class="flex gap-8">
-            <a class="text-xs text-gray-500 hover:text-primary" href="#">Privacy Policy</a>
-            <a class="text-xs text-gray-500 hover:text-primary" href="#">Terms of Service</a>
-            <a class="text-xs text-gray-500 hover:text-primary" href="#">Help Center</a>
-        </div>
-    </div>
-</footer>
-
-</body>
-</html>
-</x-recruitconnect-layout>
+</x-app-layout>

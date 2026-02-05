@@ -25,7 +25,7 @@
             </h2>
         </div>
         {{-- Search --}}
-        <form method="GET" action="{{ route('dashboard') }}" class="flex items-center gap-3 w-full max-w-[520px]">
+        <form action="{{ route('users.search') }}" method="GET" class="flex flex-1 h-full items-stretch">
             <div class="relative flex-1">
                 <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
                     search
@@ -48,10 +48,7 @@
 
         {{-- Links --}}
         <nav class="hidden md:flex items-center gap-6 shrink-0">
-            <a href="{{ route('dashboard') }}"
-               class="text-sm font-semibold {{ request()->routeIs('dashboard') ? 'text-[#137fec]' : 'text-[#111418]' }} hover:text-[#137fec] transition">
-                Offres
-            </a>
+            <a class="text-[#111418] text-sm font-medium leading-normal" href="{{ route('offers.index') }}">Offres</a>
 
             <a href="{{ route('profile.edit') }}"
                class="text-sm font-semibold {{ request()->routeIs('profile.edit') ? 'text-[#137fec]' : 'text-[#111418]' }} hover:text-[#137fec] transition">
