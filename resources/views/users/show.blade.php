@@ -39,7 +39,7 @@
                         Connections
                     </a>
 
-                    <a href="{{ route('users.search', ['q' => $user->name]) }}"
+                    <a href="{{ route('search.index', ['q' => $user->name]) }}"
                        class="h-11 rounded-xl bg-[#f0f2f4] text-[#111418] font-extrabold flex items-center justify-center hover:bg-[#e7eaee]">
                         <span class="material-symbols-outlined mr-2">search</span>
                         Find similar

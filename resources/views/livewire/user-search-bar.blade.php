@@ -1,12 +1,12 @@
 <div class="space-y-8">
     {{-- Barre de recherche --}}
-    <div class="relative flex items-center h-14 bg-white dark:bg-[#1a2633] rounded-xl shadow-sm border border-[#e5e7eb] dark:border-[#2d3748]">
+    <div class="relative flex items-center h-14 bg-white dark:bg-[#FFFFFF] rounded-xl shadow-sm border border-[#e5e7eb] dark:border-[#2d3748]">
         <span class="absolute left-5 text-[#617589] material-symbols-outlined text-[28px]">search</span>
 
         <input
             wire:model.live.debounce.300ms="q"
             wire:keydown.enter.prevent="goToResults"
-            class="w-full h-full pl-14 pr-36 rounded-xl text-lg text-[#111418] dark:text-white bg-transparent border-none focus:ring-2 focus:ring-primary placeholder:text-[#617589]"
+            class="w-full h-full pl-14 pr-36 rounded-xl text-lg text-[#111418] dark:text-[#000000] bg-transparent border-none focus:ring-2 focus:ring-primary placeholder:text-[#617589]"
             placeholder="Search by name, specialty, or company..."
         />
 
