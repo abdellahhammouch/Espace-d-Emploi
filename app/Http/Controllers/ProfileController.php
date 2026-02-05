@@ -53,16 +53,6 @@ class ProfileController extends Controller
 
         $user->save();
 
-        if ($user->hasRole('employee')) {
-            $user->employeeProfile()->updateOrCreate(
-                ['user_id' => $user->id],
-                [
-                    'speciality_id' => $data['speciality_id'] ?? null,
-                ]
-            );
-        }
-
-
         // 2) Update recruiter profile if recruiter
         if ($user->hasRole('recruiter')) {
             $user->recruiterProfile()->updateOrCreate(

@@ -25,7 +25,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role',
         'bio',
         'avatar_path',
     ];
@@ -62,14 +61,4 @@ class User extends Authenticatable
     {
         return $this->hasOne(RecruiterProfile::class);
     }
-    public function experiences()
-    {
-        return $this->hasMany(\App\Models\Experience::class);
-    }
-
-    public function educations()
-    {
-        return $this->hasMany(\App\Models\Education::class);
-    }
-
 }
