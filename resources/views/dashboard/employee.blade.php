@@ -58,46 +58,7 @@
 <body class="bg-background-light dark:bg-background-dark font-display text-[#111418] dark:text-white transition-colors duration-200">
 
 <!-- Top Navigation Bar -->
-<div class="w-full bg-white dark:bg-[#1a242f] border-b border-[#f0f2f4] dark:border-[#2d3748] sticky top-0 z-50">
-    <div class="max-w-[1200px] mx-auto px-4 md:px-10 py-3 flex items-center justify-between">
-        <div class="flex items-center gap-4 text-primary">
-            <div class="size-8">
-                <svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z"></path>
-                </svg>
-            </div>
-            <h2 class="text-[#111418] dark:text-white text-xl font-bold leading-tight tracking-tight">HireFlow</h2>
-        </div>
-
-        <div class="flex flex-1 justify-end items-center gap-8">
-            <nav class="hidden md:flex items-center gap-8">
-                <a class="text-primary text-sm font-semibold leading-normal" href="#">Dashboard</a>
-                <a class="text-[#111418] dark:text-gray-300 text-sm font-medium hover:text-primary transition-colors" href="#">Applications</a>
-                <a class="text-[#111418] dark:text-gray-300 text-sm font-medium hover:text-primary transition-colors" href="#">Messages</a>
-                <a class="text-[#111418] dark:text-gray-300 text-sm font-medium hover:text-primary transition-colors" href="#">Job Alerts</a>
-            </nav>
-
-            <div class="flex items-center gap-3 border-l border-gray-200 dark:border-gray-700 pl-6">
-                <div class="text-right hidden sm:block">
-                    <p class="text-xs font-bold text-[#111418] dark:text-white">{{ $user->name }}</p>
-                    <p class="text-[10px] text-gray-500">Employee</p>
-                </div>
-
-                <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 ring-2 ring-primary/20"
-                     style="background-image: url('{{ $avatarUrl }}');">
-                </div>
-
-                <!-- Logout (important pour tester login/register facilement) -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="ml-2 text-xs font-semibold text-gray-500 hover:text-primary transition-colors">
-                        Logout
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+<x-recruitconnect-layout>
 
 <main class="max-w-[1200px] mx-auto pb-20">
 
@@ -153,18 +114,9 @@
 
     <!-- Job Grid -->
     <div class="px-4">
-        {!!--
-            Ici, ton HTML est très long.
-            Pour l’instant on le laisse “statique” pour tester.
-            Après, on le rend dynamique avec DB + Livewire.
-        --!!}
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Colle ici le reste de tes Job Cards tel quel (aucune modif obligatoire) -->
-            {!!--
-                Tu peux recoller toutes tes cards ici sans changer.
-                Le but maintenant : tester la redirection + affichage.
-            --!!}
         </div>
 
         <!-- Loading Indicator -->
@@ -195,3 +147,4 @@
 
 </body>
 </html>
+</x-recruitconnect-layout>

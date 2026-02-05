@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\EmployeeProfile;
+use App\Models\RecruiterProfile;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable
 {
@@ -49,4 +52,24 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function employeeProfile()
+    {
+        return $this->hasOne(EmployeeProfile::class);
+    }
+
+    public function recruiterProfile()
+    {
+        return $this->hasOne(RecruiterProfile::class);
+    }
+    public function experiences()
+    {
+        return $this->hasMany(\App\Models\Experience::class);
+    }
+
+    public function educations()
+    {
+        return $this->hasMany(\App\Models\Education::class);
+    }
+
 }

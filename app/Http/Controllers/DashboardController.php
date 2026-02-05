@@ -15,7 +15,7 @@ class DashboardController extends Controller
         }
 
         if ($user->hasRole('recruiter')) {
-            return view('dashboard.recruiter'); // on va le faire après
+            return view('dashboard.recruiter');
         }
 
         abort(403, 'Role not assigned.');

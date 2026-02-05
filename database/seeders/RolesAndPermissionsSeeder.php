@@ -29,7 +29,6 @@ class RolesAndPermissionsSeeder extends Seeder
             'cv.view_own',
         ];
 
-        // 4) Créer les permissions (sans doublons)
         foreach ($permissions as $permission) {
             Permission::firstOrCreate([
                 'name' => $permission,
@@ -54,9 +53,6 @@ class RolesAndPermissionsSeeder extends Seeder
             'application.view_own',
             'cv.edit_own',
             'cv.view_own',
-        ]);
-
-        // (optionnel) si tu veux que admin ait tout :
-        // $admin->syncPermissions(Permission::where('guard_name', $guard)->get());
+        ]);   
     }
 }
