@@ -15,6 +15,7 @@ use App\Http\Controllers\ConnectionsController;
 
 
 
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -29,8 +30,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/users/search', [UserSearchController::class, 'index'])->name('users.search');
+Route::middleware('auth')->group(function () {
+    Route::view('/search', 'search.index')->name('search.index');
+    Route::get('/search/results', [UserSearchController::class, 'results'])->name('search.results');
 });
 Route::middleware(['auth', 'role:employee'])->group(function () {
     Route::post('/profile/experiences', [ExperienceController::class, 'store'])->name('experiences.store');
@@ -43,19 +45,15 @@ Route::middleware(['auth', 'role:employee'])->group(function () {
 });
 Route::middleware(['auth'])->group(function () {
 
-    // offres (employee + recruiter peuvent consulter)
     Route::get('/offers', [OfferController::class, 'index'])->name('offers.index');
     Route::get('/offers/{offer}', [OfferController::class, 'show'])->name('offers.show');
 
-    // profil public interne
     Route::get('/users/{user}', [UserProfileController::class, 'show'])->name('users.show');
 
-    // postuler (employee فقط)
     Route::middleware(['role:employee'])->group(function () {
         Route::post('/offers/{offer}/apply', [ApplicationController::class, 'store'])->name('offers.apply');
     });
 
-    // recruteur (CRUD offres + candidatures)
     Route::prefix('recruiter')->name('recruiter.')->middleware(['role:recruiter'])->group(function () {
         Route::get('/offers', [RecruiterJobOfferController::class, 'index'])->name('offers.index');
         Route::get('/offers/create', [RecruiterJobOfferController::class, 'create'])->name('offers.create');
