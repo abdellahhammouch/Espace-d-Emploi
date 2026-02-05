@@ -13,48 +13,50 @@ class RolesAndPermissionsSeeder extends Seeder
     {
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
-        $guard = config('auth.defaults.guard', 'web');
-
         $permissions = [
+            // Offres
             'offer.view',
             'offer.create',
             'offer.update',
-            'offer.delete',
             'offer.close',
 
-            'application.create',
-            'application.view_own',
+            // Candidatures
+            'application.apply',
             'application.view_received',
+            'application.view_own',
 
-            'cv.view_own',
-            'cv.edit_own',
+            // Profil/CV
+            'profile.edit',
+            'cv.edit',
+
+            // Réseau
+            'friend.request',
+            'friend.accept',
+            'friend.decline',
         ];
 
-        foreach ($permissions as $name) {
+        foreach ($permissions as $p) {
             Permission::firstOrCreate([
-                'name' => $name,
-                'guard_name' => $guard,
+                'name' => $p,
+                'guard_name' => 'web',
             ]);
         }
 
-        $recruiter = Role::firstOrCreate(['name' => 'recruiter', 'guard_name' => $guard]);
-        $employee  = Role::firstOrCreate(['name' => 'employee',  'guard_name' => $guard]);
+        $recruiter = Role::firstOrCreate(['name' => 'recruiter', 'guard_name' => 'web']);
+        $employee  = Role::firstOrCreate(['name' => 'employee',  'guard_name' => 'web']);
 
         $recruiter->syncPermissions([
-            'offer.view',
-            'offer.create',
-            'offer.update',
-            'offer.delete',
-            'offer.close',
+            'offer.view', 'offer.create', 'offer.update', 'offer.close',
             'application.view_received',
+            'profile.edit',
+            'friend.request','friend.accept','friend.decline',
         ]);
 
         $employee->syncPermissions([
             'offer.view',
-            'application.create',
-            'application.view_own',
-            'cv.view_own',
-            'cv.edit_own',
+            'application.apply', 'application.view_own',
+            'profile.edit','cv.edit',
+            'friend.request','friend.accept','friend.decline',
         ]);
     }
 }

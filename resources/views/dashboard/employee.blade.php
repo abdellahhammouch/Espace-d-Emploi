@@ -35,6 +35,11 @@
             </a>
         </section>
 
+        {{-- ✅ Livewire Search (Dashboard) --}}
+        <section class="bg-transparent">
+            <livewire:dashboard-user-search />
+        </section>
+
         {{-- Latest offers --}}
         <section class="bg-white rounded-2xl border border-[#f0f2f4] shadow-soft overflow-hidden">
             <div class="p-5 flex items-center justify-between border-b border-[#f0f2f4]">

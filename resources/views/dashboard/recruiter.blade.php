@@ -31,6 +31,11 @@
             </a>
         </div>
 
+        {{-- ✅ Livewire Search (Dashboard) --}}
+        <section class="bg-transparent">
+            <livewire:dashboard-user-search />
+        </section>
+
         <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="bg-white rounded-2xl border border-[#f0f2f4] p-5 shadow-soft">
                 <p class="text-xs font-bold text-muted uppercase tracking-wider">Offres ouvertes</p>

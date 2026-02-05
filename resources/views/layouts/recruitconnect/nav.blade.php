@@ -24,30 +24,16 @@
                 RecruitSmart
             </h2>
         </div>
-        {{-- Search --}}
-        <form action="{{ route('users.search') }}" method="GET" class="flex flex-1 h-full items-stretch">
-            <div class="relative flex-1">
-                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-                    search
-                </span>
-                <input
-                    type="text"
-                    name="q"
-                    value="{{ request('q') }}"
-                    placeholder="Rechercher un utilisateur..."
-                    class="w-full h-12 pl-12 pr-4 rounded-2xl bg-[#f6f7f8]
-                           border border-transparent focus:border-[#137fec]
-                           focus:ring-2 focus:ring-[#137fec]/20 outline-none"
-                />
-            </div>
-            <button type="submit"
-                class="h-12 px-6 rounded-2xl bg-[#137fec] text-white font-semibold hover:opacity-90 transition">
-                Chercher
-            </button>
-        </form>
-
         {{-- Links --}}
         <nav class="hidden md:flex items-center gap-6 shrink-0">
+            <a href="{{ route('users.search') }}"
+               class="hidden md:inline-flex items-center gap-2 rounded-lg px-3 py-2 bg-gray-100 dark:bg-gray-800 text-sm font-semibold hover:bg-gray-200 dark:hover:bg-gray-700">
+                <span class="material-symbols-outlined text-[20px]">search</span>
+                Recherche
+            </a>
+            <a href="{{ route('connections.index') }}" class="text-sm font-bold hover:text-primary">
+                Network
+            </a>
             <a class="text-[#111418] text-sm font-medium leading-normal" href="{{ route('offers.index') }}">Offres</a>
 
             <a href="{{ route('profile.edit') }}"

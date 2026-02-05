@@ -1,40 +1,137 @@
-<x-app-layout>
-    <x-slot name="header">Profil</x-slot>
+<x-recruitconnect-layout>
+    @php
+        $avatar = $user->avatar_path ? asset('storage/'.$user->avatar_path) : 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&background=137fec&color=ffffff&bold=true';
 
-    <div class="max-w-4xl mx-auto p-6 space-y-6">
-        <div class="bg-white rounded-2xl border border-slate-200 p-6">
-            <div class="text-2xl font-extrabold">{{ $user->name }}</div>
-            <div class="text-slate-500">{{ $user->email }}</div>
-            <div class="mt-3 text-slate-700">{{ $user->bio }}</div>
-        </div>
+        $isRecruiter = $user->hasRole('recruiter');
 
-        @if($user->employeeProfile)
-            <div class="bg-white rounded-2xl border border-slate-200 p-6 space-y-3">
-                <div class="font-bold">CV</div>
+        $headline = $isRecruiter
+            ? (optional($user->recruiterProfile)->company_name ?? 'Recruiter')
+            : (optional(optional($user->employeeProfile)->speciality)->name ?? optional($user->employeeProfile)->speciality ?? 'Job Seeker');
 
-                <div class="text-sm text-slate-600">
-                    Spécialité:
-                    {{ $user->employeeProfile?->speciality?->name ?? $user->employeeProfile?->speciality ?? '-' }}
-                </div>
+        $location = $isRecruiter
+            ? (optional($user->recruiterProfile)->location ?? null)
+            : (optional($user->employeeProfile)->location ?? null);
 
-                <div>
-                    <div class="font-semibold mb-2">Expériences</div>
-                    <ul class="list-disc pl-5 text-sm text-slate-700 space-y-1">
-                        @foreach($user->employeeProfile->experiences as $e)
-                            <li>{{ $e->job_title }} - {{ $e->company }}</li>
-                        @endforeach
-                    </ul>
-                </div>
+        $experiences = optional($user->employeeProfile)->experiences ?? collect();
+        $educations  = optional($user->employeeProfile)->educations ?? collect();
+    @endphp
 
-                <div>
-                    <div class="font-semibold mb-2">Formations</div>
-                    <ul class="list-disc pl-5 text-sm text-slate-700 space-y-1">
-                        @foreach($user->employeeProfile->educations as $ed)
-                            <li>{{ $ed->degree }} - {{ $ed->school }}</li>
-                        @endforeach
-                    </ul>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {{-- Left --}}
+        <div class="lg:col-span-4 space-y-6">
+            <div class="bg-white rounded-2xl border border-[#e5e7eb] p-6 text-center">
+                <div class="w-32 h-32 rounded-full mx-auto bg-cover bg-center ring-4 ring-primary/10" style="background-image:url('{{ $avatar }}')"></div>
+                <h1 class="mt-4 text-2xl font-black text-[#111418]">{{ $user->name }}</h1>
+                <p class="text-primary font-extrabold mt-1">{{ $headline }}</p>
+
+                @if($location)
+                    <p class="text-[#617589] text-sm mt-2 flex items-center justify-center gap-1">
+                        <span class="material-symbols-outlined text-base">location_on</span>
+                        {{ $location }}
+                    </p>
+                @endif
+
+                <div class="mt-6 flex flex-col gap-3">
+                    {{-- (Livewire actions بعدين) حاليا: زر يرجع للـ connections --}}
+                    <a href="{{ route('connections.index') }}"
+                       class="h-11 rounded-xl bg-primary text-white font-extrabold flex items-center justify-center hover:opacity-95">
+                        <span class="material-symbols-outlined mr-2">group</span>
+                        Connections
+                    </a>
+
+                    <a href="{{ route('users.search', ['q' => $user->name]) }}"
+                       class="h-11 rounded-xl bg-[#f0f2f4] text-[#111418] font-extrabold flex items-center justify-center hover:bg-[#e7eaee]">
+                        <span class="material-symbols-outlined mr-2">search</span>
+                        Find similar
+                    </a>
                 </div>
             </div>
-        @endif
+
+            <div class="bg-white rounded-2xl border border-[#e5e7eb] p-6">
+                <h3 class="text-xs font-black uppercase tracking-wider text-[#617589] mb-4">Information</h3>
+
+                <div class="space-y-4 text-sm">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-primary">mail</span>
+                        <span class="text-[#111418]">{{ $user->email }}</span>
+                    </div>
+
+                    @if($isRecruiter && optional($user->recruiterProfile)->website)
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary">link</span>
+                            <span class="text-[#111418]">{{ $user->recruiterProfile->website }}</span>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        {{-- Right --}}
+        <div class="lg:col-span-8 space-y-6">
+            <div class="bg-white rounded-2xl border border-[#e5e7eb] p-6">
+                <h2 class="text-xl font-black text-[#111418] flex items-center gap-2 mb-4">
+                    <span class="material-symbols-outlined text-primary">person</span>
+                    About
+                </h2>
+                <p class="text-[#111418] leading-relaxed">
+                    {{ $user->bio ?: 'No bio yet.' }}
+                </p>
+            </div>
+
+            @if(!$isRecruiter)
+                <div class="bg-white rounded-2xl border border-[#e5e7eb] p-6">
+                    <h2 class="text-xl font-black text-[#111418] flex items-center gap-2 mb-6">
+                        <span class="material-symbols-outlined text-primary">work</span>
+                        Experiences
+                    </h2>
+
+                    @forelse($experiences as $exp)
+                        <div class="pb-5 mb-5 border-b border-[#f0f2f4] last:border-0 last:pb-0 last:mb-0">
+                            <div class="flex flex-wrap items-start justify-between gap-2">
+                                <div>
+                                    <p class="font-extrabold text-[#111418]">{{ $exp->title }}</p>
+                                    <p class="text-primary font-bold text-sm">{{ $exp->company }}</p>
+                                </div>
+                                <span class="text-xs font-bold bg-[#f0f2f4] px-3 py-1 rounded-full text-[#617589]">
+                                    {{ $exp->date_start }} → {{ $exp->date_end ?? 'Present' }}
+                                </span>
+                            </div>
+                            @if($exp->description)
+                                <p class="text-sm text-[#617589] mt-2">{{ $exp->description }}</p>
+                            @endif
+                        </div>
+                    @empty
+                        <p class="text-sm text-[#617589]">No experiences added.</p>
+                    @endforelse
+                </div>
+
+                <div class="bg-white rounded-2xl border border-[#e5e7eb] p-6">
+                    <h2 class="text-xl font-black text-[#111418] flex items-center gap-2 mb-6">
+                        <span class="material-symbols-outlined text-primary">school</span>
+                        Education
+                    </h2>
+
+                    @forelse($educations as $edu)
+                        <div class="pb-5 mb-5 border-b border-[#f0f2f4] last:border-0 last:pb-0 last:mb-0">
+                            <p class="font-extrabold text-[#111418]">{{ $edu->degree }}</p>
+                            <p class="text-sm text-[#617589]">{{ $edu->school }}</p>
+                            <p class="text-xs text-[#617589] mt-1">Year: {{ $edu->year ?? '—' }}</p>
+                        </div>
+                    @empty
+                        <p class="text-sm text-[#617589]">No education added.</p>
+                    @endforelse
+                </div>
+            @else
+                <div class="bg-white rounded-2xl border border-[#e5e7eb] p-6">
+                    <h2 class="text-xl font-black text-[#111418] flex items-center gap-2 mb-4">
+                        <span class="material-symbols-outlined text-primary">business</span>
+                        Company
+                    </h2>
+                    <p class="text-sm text-[#617589]">
+                        {{ optional($user->recruiterProfile)->company_name ?? '—' }}
+                    </p>
+                </div>
+            @endif
+        </div>
     </div>
-</x-app-layout>
+</x-recruitconnect-layout>
