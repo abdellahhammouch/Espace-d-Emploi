@@ -26,6 +26,7 @@ class ApplicationController extends Controller
                 'note'   => $data['note'] ?? null,
             ]
         );
+        abort_unless(auth()->user()->hasRole('employee'), 403);
 
         return back()->with('status', 'application-sent');
     }

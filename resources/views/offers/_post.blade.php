@@ -1,0 +1,87 @@
+@php
+    $company = $offer->recruiter?->recruiterProfile?->company_name ?? $offer->recruiter?->name ?? 'Recruiter';
+    $avatar = $offer->recruiter?->avatar_path
+        ? \Illuminate\Support\Facades\Storage::url($offer->recruiter->avatar_path)
+        : 'https://ui-avatars.com/api/?name='.urlencode($company).'&background=137fec&color=ffffff&bold=true';
+
+    $imagePath = $offer->image_path ?? $offer->image_offer ?? null;
+
+    $image = $imagePath
+        ? \Illuminate\Support\Facades\Storage::url($imagePath)
+        : null;
+@endphp
+
+<article class="bg-white rounded-2xl border border-[#e5e7eb] shadow-sm overflow-hidden">
+    {{-- Header --}}
+    <div class="p-5 flex items-start justify-between gap-4">
+        <div class="flex gap-3 min-w-0">
+            <div class="size-11 rounded-xl bg-cover bg-center border border-[#e5e7eb]"
+                 style="background-image:url('{{ $avatar }}')"></div>
+
+            <div class="min-w-0">
+                <p class="font-extrabold text-[#111418] truncate">{{ $company }}</p>
+                <p class="text-xs text-[#617589] truncate">
+                    {{ $offer->place }} • {{ $offer->created_at?->diffForHumans() }}
+                </p>
+            </div>
+        </div>
+
+        <span class="shrink-0 px-3 py-1 rounded-full text-xs font-bold bg-primary/10 text-primary">
+            {{ $offer->contractType?->name }}
+        </span>
+    </div>
+
+    {{-- Content --}}
+    <div class="px-5 pb-4 space-y-3">
+        <h3 class="text-lg font-black text-[#111418]">{{ $offer->title }}</h3>
+
+        <p class="text-sm text-[#111418] leading-relaxed whitespace-pre-line">
+            {{ $offer->description }}
+        </p>
+    </div>
+
+    {{-- Image --}}
+    @if($image)
+        <div class="border-y border-[#e5e7eb] bg-[#f6f7f8]">
+            <img src="{{ $image }}" alt="Offer image" class="w-full max-h-[420px] object-cover">
+        </div>
+    @endif
+
+    {{-- Actions row --}}
+    <div class="p-4 flex items-center justify-between gap-3">
+        <div class="text-xs text-[#617589]">
+            <span class="font-bold text-[#111418]">{{ $offer->likes_count }}</span> likes
+        </div>
+
+        <div class="flex gap-2">
+            {{-- Like --}}
+            <form method="POST" action="{{ route('offers.like', $offer) }}">
+                @csrf
+                <button type="submit"
+                        class="h-11 px-4 rounded-xl border border-[#e5e7eb] font-extrabold flex items-center gap-2
+                               hover:bg-[#f0f2f4] transition {{ $offer->liked_by_me ? 'text-primary border-primary/30 bg-primary/5' : 'text-[#111418]' }}">
+                    <span class="material-symbols-outlined text-[20px]">
+                        thumb_up
+                    </span>
+                    {{ $offer->liked_by_me ? 'Liked' : 'Like' }}
+                </button>
+            </form>
+
+            {{-- Apply --}}
+            @if($offer->applied_by_me)
+                <button disabled
+                        class="h-11 px-5 rounded-xl bg-[#f0f2f4] text-[#617589] font-extrabold cursor-not-allowed">
+                    Déjà postulé
+                </button>
+            @else
+                <form method="POST" action="{{ route('offers.apply', $offer) }}">
+                    @csrf
+                    <button type="submit"
+                            class="h-11 px-5 rounded-xl bg-primary text-white font-extrabold hover:opacity-95 transition">
+                        Postuler
+                    </button>
+                </form>
+            @endif
+        </div>
+    </div>
+</article>

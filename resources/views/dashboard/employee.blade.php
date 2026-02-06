@@ -10,6 +10,11 @@
 
         $latestOffers = \App\Models\JobOffer::query()
             ->with(['recruiter.recruiterProfile', 'contractType'])
+            ->withCount('likes')
+            ->withExists([
+                'likes as liked_by_me' => fn($q) => $q->where('user_id', $me->id),
+                'applications as applied_by_me' => fn($q) => $q->where('employee_id', $me->id),
+            ])
             ->where('is_closed', false)
             ->latest()
             ->limit(6)
@@ -35,7 +40,7 @@
             </a>
         </section>
 
-        {{-- ✅ Livewire Search (Dashboard) --}}
+        {{-- Livewire Search (Dashboard) --}}
         <section class="bg-transparent">
             <livewire:dashboard-user-search />
         </section>
@@ -47,28 +52,9 @@
                 <a class="text-sm font-bold text-primary hover:underline" href="{{ route('offers.index') }}">Voir tout</a>
             </div>
 
-            <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-5 space-y-5">
                 @forelse($latestOffers as $offer)
-                    @php
-                        $company = optional($offer->recruiter->recruiterProfile)->company_name ?? 'Entreprise';
-                    @endphp
-
-                    <a href="{{ route('offers.show', $offer) }}"
-                       class="group rounded-2xl border border-[#f0f2f4] hover:border-primary/30 bg-background-light/40 p-4 transition">
-                        <div class="flex items-start justify-between gap-3">
-                            <div class="min-w-0">
-                                <p class="font-extrabold text-ink truncate">{{ $offer->title }}</p>
-                                <p class="text-sm text-muted truncate">{{ $company }} • {{ $offer->place }}</p>
-                            </div>
-                            <span class="shrink-0 px-3 py-1 rounded-full text-xs font-bold bg-primary/10 text-primary">
-                                {{ $offer->contractType?->name }}
-                            </span>
-                        </div>
-                        <p class="mt-3 text-sm text-muted line-clamp-2">
-                            {{ \Illuminate\Support\Str::limit($offer->description, 120) }}
-                        </p>
-                        <p class="mt-3 text-sm font-bold text-primary">Voir l’offre →</p>
-                    </a>
+                    @include('offers._post', ['offer' => $offer])
                 @empty
                     <div class="text-sm text-muted">Aucune offre pour le moment.</div>
                 @endforelse

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+
 class JobOffer extends Model
 {
     protected $fillable = [
@@ -39,5 +40,9 @@ class JobOffer extends Model
     public function applications(): HasMany
     {
         return $this->hasMany(Application::class);
+    }
+    public function likes(): HasMany
+    {
+        return $this->hasMany(\App\Models\OfferLike::class, 'job_offer_id');
     }
 }

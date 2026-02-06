@@ -32,14 +32,17 @@
                 Recherche
             </a>
             <a href="{{ route('dashboard') }}"
-               class="text-sm font-semibold {{ request()->routeIs('dashboard') ? 'text-primary' : 'text-[#111418]' }} hover:text-primary transition">
+               class="text-sm font-semibold {{ request()->routeIs('dashboard') ? 'text-[#137fec]' : 'text-[#111418]' }} hover:text-[#137fec] transition">
                 Dashboard
             </a>
-            <a href="{{ route('connections.index') }}" class="text-sm font-bold hover:text-primary">
+            <a href="{{ route('connections.index') }}"
+               class="text-sm font-semibold {{ request()->routeIs('connections.index') ? 'text-[#137fec]' : 'text-[#111418]' }} hover:text-[#137fec] transition">
                 Network
             </a>
-            <a class="text-[#111418] text-sm font-medium leading-normal" href="{{ route('offers.index') }}">Offres</a>
-
+            <a href="{{ route('offers.index') }}"
+               class="text-sm font-semibold {{ request()->routeIs('offers.index') ? 'text-[#137fec]' : 'text-[#111418]' }} hover:text-[#137fec] transition">
+                Offres
+            </a>
             <a href="{{ route('profile.edit') }}"
                class="text-sm font-semibold {{ request()->routeIs('profile.edit') ? 'text-[#137fec]' : 'text-[#111418]' }} hover:text-[#137fec] transition">
                 Voir profil

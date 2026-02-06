@@ -25,7 +25,7 @@
         @if(auth()->user()->hasRole('employee') && !$offer->is_closed)
             <div class="bg-white rounded-2xl border border-slate-200 p-6">
                 @if($applied)
-                    <div class="text-green-700 font-semibold">✅ Tu as déjà postulé à cette offre.</div>
+                    <div class="text-green-700 font-semibold">Tu as déjà postulé à cette offre.</div>
                 @else
                     <form method="POST" action="{{ route('offers.apply', $offer) }}" class="space-y-3">
                         @csrf

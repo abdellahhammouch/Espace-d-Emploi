@@ -15,25 +15,12 @@
             <button class="rounded-xl px-5 py-2 bg-slate-900 text-white">Chercher</button>
         </form>
 
-        <div class="grid md:grid-cols-3 gap-5">
-            @foreach($offers as $offer)
-                <a href="{{ route('offers.show', $offer) }}" class="block bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-sm transition">
-                    <img class="w-full h-44 object-cover" src="{{ asset('storage/'.$offer->image_path) }}" alt="">
-                    <div class="p-4 space-y-1">
-                        <div class="font-bold text-slate-900">{{ $offer->title }}</div>
-                        <div class="text-sm text-slate-500">
-                            {{ optional($offer->recruiter->recruiterProfile)->company_name ?? 'Entreprise' }} • {{ $offer->place }}
-                        </div>
-                        <div class="text-xs text-slate-500">
-                            {{ $offer->contractType->name ?? '' }}
-                        </div>
-                    </div>
-                </a>
-            @endforeach
-        </div>
-
-        <div>
-            {{ $offers->links() }}
+        <div class="space-y-5">
+            @forelse($offers as $offer)
+                @include('offers._post', ['offer' => $offer])
+            @empty
+                <p class="text-sm text-[#617589]">Aucune offre disponible.</p>
+            @endforelse
         </div>
     </div>
 </x-app-layout>

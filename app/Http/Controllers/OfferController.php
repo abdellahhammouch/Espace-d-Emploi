@@ -29,6 +29,18 @@ class OfferController extends Controller
             ->withQueryString();
 
         $contractTypes = ContractType::query()->orderBy('name')->get();
+        $me = auth()->id();
+
+        $offers = \App\Models\JobOffer::query()
+            ->with(['recruiter.recruiterProfile', 'contractType'])
+            ->withCount('likes')
+            ->withExists([
+                'likes as liked_by_me' => fn ($q) => $q->where('user_id', $me),
+                'applications as applied_by_me' => fn ($q) => $q->where('employee_id', $me),
+            ])
+            ->where('is_closed', false)
+            ->latest()
+            ->get();
 
         return view('offers.index', compact('offers', 'contractTypes', 'q', 'contractTypeId'));
     }

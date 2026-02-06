@@ -11,6 +11,8 @@ use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\Recruiter\JobOfferController as RecruiterJobOfferController;
 use App\Http\Controllers\ConnectionsController;
+use App\Http\Controllers\OfferLikeController;
+
 
 
 
@@ -71,6 +73,10 @@ Route::get('/connections', [ConnectionsController::class, 'index'])->name('conne
 Route::post('/connections/{user}/request', [ConnectionsController::class, 'send'])->name('connections.request');
 Route::post('/connections/requests/{friendRequest}/accept', [ConnectionsController::class, 'accept'])->name('connections.accept');
 Route::post('/connections/requests/{friendRequest}/decline', [ConnectionsController::class, 'decline'])->name('connections.decline');
+
+
+Route::post('offers/{offer}/like', [OfferLikeController::class, 'toggle'])
+    ->name('offers.like');
 
 
 require __DIR__.'/auth.php';
