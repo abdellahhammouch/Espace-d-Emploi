@@ -15,12 +15,10 @@
             <button class="rounded-xl px-5 py-2 bg-slate-900 text-white">Chercher</button>
         </form>
 
-        <div class="space-y-5">
-            @forelse($offers as $offer)
-                @include('offers._post', ['offer' => $offer])
-            @empty
-                <p class="text-sm text-[#617589]">Aucune offre disponible.</p>
-            @endforelse
+        <div class="space-y-6">
+            @foreach($offers as $offer)
+                <livewire:offer-post :offer="$offer" :key="$offer->id" />
+            @endforeach
         </div>
     </div>
 </x-app-layout>

@@ -31,22 +31,61 @@
                     </p>
                 @endif
 
-                <div class="mt-6 flex flex-col gap-3">
-                    {{-- (Livewire actions بعدين) حاليا: زر يرجع للـ connections --}}
-                    <a href="{{ route('connections.index') }}"
-                       class="h-11 rounded-xl bg-primary text-white font-extrabold flex items-center justify-center hover:opacity-95">
-                        <span class="material-symbols-outlined mr-2">group</span>
-                        Connections
-                    </a>
+                <div class="space-y-3">
+                    @if($relation === 'self')
+                        <a href="{{ route('profile.edit') }}"
+                           class="h-11 w-full rounded-xl bg-primary text-white font-extrabold flex items-center justify-center hover:opacity-95">
+                            Modifier mon profil
+                        </a>
 
+                    @elseif($relation === 'connected')
+                        <button disabled
+                                class="h-11 w-full rounded-xl bg-[#f0f2f4] text-[#617589] font-extrabold cursor-not-allowed">
+                                Connected
+                        </button>
+
+                    @elseif($relation === 'pending')
+                        <button disabled
+                            class="h-11 w-full rounded-xl bg-[#f0f2f4] text-[#617589] font-extrabold cursor-not-allowed">
+                            Pending
+                        </button>
+
+                    @elseif($relation === 'incoming')
+                        <div class="grid grid-cols-2 gap-2">
+                            <form method="POST" action="{{ route('connections.accept', $incomingRequest) }}">
+                                @csrf
+                                <button class="h-11 w-full rounded-xl bg-primary text-white font-extrabold    hover:opacity-95">
+                                    Accepter
+                                </button>
+                            </form>
+
+                            <form method="POST" action="{{ route('connections.decline', $incomingRequest) }}">
+                                @csrf
+                                <button class="h-11 w-full rounded-xl border border-[#e5e7eb] bg-white
+                                    text-[#111418] font-extrabold hover:bg-[#f0f2f4]">
+                                    Refuser
+                                </button>
+                            </form>
+                        </div>
+
+                    @else
+                        <form method="POST" action="{{ route('connections.request', $user) }}">
+                            @csrf
+                            <button class="h-11 w-full rounded-xl bg-primary text-white font-extrabold
+                                hover:opacity-95">
+                                Connect
+                            </button>
+                        </form>
+                    @endif
+
+                    {{-- Tu peux garder Find similar si tu veux --}}
                     <a href="{{ route('search.index', ['q' => $user->name]) }}"
-                       class="h-11 rounded-xl bg-[#f0f2f4] text-[#111418] font-extrabold flex items-center justify-center hover:bg-[#e7eaee]">
+                       class="h-11 w-full rounded-xl bg-[#f0f2f4] text-[#111418] font-extrabold flex items-center justify-center hover:bg-[#e7eaee]">
                         <span class="material-symbols-outlined mr-2">search</span>
                         Find similar
                     </a>
                 </div>
             </div>
-
             <div class="bg-white rounded-2xl border border-[#e5e7eb] p-6">
                 <h3 class="text-xs font-black uppercase tracking-wider text-[#617589] mb-4">Information</h3>
 

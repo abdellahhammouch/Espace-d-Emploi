@@ -70,4 +70,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(FriendRequest::class, 'receiver_id');
     }
+    public function offerLikes()
+    {
+        return $this->hasMany(\App\Models\OfferLike::class);
+    }
 }

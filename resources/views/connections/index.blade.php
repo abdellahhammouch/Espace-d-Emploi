@@ -20,7 +20,6 @@
                 ? 'border-b-2 border-primary text-primary pb-3 font-extrabold'
                 : 'border-b-2 border-transparent text-[#617589] pb-3 font-bold hover:text-[#111418]';
         @endphp
-
         <div class="flex gap-8 border-b border-[#e5e7eb]">
             <a class="{{ $tabClass('friends') }}" href="{{ route('connections.index', ['tab' => 'friends']) }}">
                 My Friends <span class="ml-2 text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-black">{{ $friendsCount }}</span>
@@ -128,8 +127,11 @@
                     <div class="bg-white border border-[#e5e7eb] rounded-2xl p-4 text-center">
                         <div class="w-16 h-16 rounded-full mx-auto bg-cover bg-center" style="background-image:url('{{ $avatar }}')"></div>
                         <h4 class="mt-3 text-sm font-extrabold text-[#111418]">{{ $u->name }}</h4>
-                        <p class="text-[11px] text-[#617589] mb-4">{{ $title }}</p>
-
+                        <p class="text-[11px] text-[#617589] mb-1">{{ $title }}</p>
+                        <a href="{{ route('users.show', $u) }}"
+                           class="mb-3 inline-block text-sm font-semibold text-primary hover:underline">
+                            Voir profil →
+                        </a>
                         <form method="POST" action="{{ route('connections.request', $u) }}">
                             @csrf
                             <button class="w-full py-2 border border-primary text-primary text-xs font-extrabold rounded-xl hover:bg-primary/5">

@@ -10,6 +10,7 @@ class EmployeeProfile extends Model
     protected $fillable = [
         'user_id',
         'speciality',
+        'speciality_id',
         'location',
     ];
 

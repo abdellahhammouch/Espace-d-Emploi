@@ -68,6 +68,13 @@
                     />
                 </div>
             </div>
+            <div class="mt-4">
+                <x-input-label for="location" value="Location" />
+                <x-text-input id="location" class="block mt-1 w-full"
+                    type="text" name="location" value="{{ old('location') }}"
+                    placeholder="Casablanca, Safi..." />
+                <x-input-error :messages="$errors->get('location')" class="mt-2" />
+            </div>
             {{-- Speciality (only for employee/job seeker) --}}
             <div id="employeeFields" class="flex flex-col gap-1.5 hidden">
                 <label class="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Speciality</label>

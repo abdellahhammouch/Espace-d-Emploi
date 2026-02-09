@@ -27,7 +27,7 @@
         {{-- Links --}}
         <nav class="hidden md:flex items-center gap-6 shrink-0">
             <a href="{{ route('search.index') }}"
-               class="hidden md:inline-flex items-center gap-2 rounded-lg px-3 py-2 bg-[#137fec] dark:bg-[#137fec] text-sm font-semibold hover:bg-gray-200 dark:hover:bg-gray-700">
+               class="hidden md:inline-flex items-center gap-2 rounded-lg px-3 py-2 bg-[#137fec] dark:bg-[#137fec] text-sm font-semibold hover:bg-gray-200 hover:text-[#137fec] dark:hover:bg-gray-700">
                 <span class="material-symbols-outlined text-[20px]">search</span>
                 Recherche
             </a>

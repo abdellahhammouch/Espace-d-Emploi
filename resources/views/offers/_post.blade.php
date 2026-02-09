@@ -1,7 +1,14 @@
 @php
-    $company = $offer->recruiter?->recruiterProfile?->company_name ?? $offer->recruiter?->name ?? 'Recruiter';
-    $avatar = $offer->recruiter?->avatar_path
-        ? \Illuminate\Support\Facades\Storage::url($offer->recruiter->avatar_path)
+    $recruiter = $offer->recruiter;
+
+    $company = $recruiter?->recruiterProfile?->company_name
+        ?? $recruiter?->name
+        ?? 'Entreprise';
+
+    $publisher = $recruiter?->name ?? 'Recruteur';
+
+    $avatar = $recruiter?->avatar_path
+        ? \Illuminate\Support\Facades\Storage::url($recruiter->avatar_path)
         : 'https://ui-avatars.com/api/?name='.urlencode($company).'&background=137fec&color=ffffff&bold=true';
 
     $imagePath = $offer->image_path ?? $offer->image_offer ?? null;
@@ -11,6 +18,7 @@
         : null;
 @endphp
 
+
 <article class="bg-white rounded-2xl border border-[#e5e7eb] shadow-sm overflow-hidden">
     {{-- Header --}}
     <div class="p-5 flex items-start justify-between gap-4">
@@ -19,7 +27,7 @@
                  style="background-image:url('{{ $avatar }}')"></div>
 
             <div class="min-w-0">
-                <p class="font-extrabold text-[#111418] truncate">{{ $company }}</p>
+                <p class="font-extrabold text-[#111418] truncate">{{ $publisher }}</p>
                 <p class="text-xs text-[#617589] truncate">
                     {{ $offer->place }} • {{ $offer->created_at?->diffForHumans() }}
                 </p>
@@ -33,8 +41,11 @@
 
     {{-- Content --}}
     <div class="px-5 pb-4 space-y-3">
-        <h3 class="text-lg font-black text-[#111418]">{{ $offer->title }}</h3>
-
+        <div class="flex items-center gap-2 flex-wrap">
+            <h3 class="text-lg font-black text-primary">{{ $company }}</h3>
+            <span class="text-[#617589] font-black">•</span>
+            <h3 class="text-lg font-black text-[#111418]">{{ $offer->title }}</h3>
+        </div>
         <p class="text-sm text-[#111418] leading-relaxed whitespace-pre-line">
             {{ $offer->description }}
         </p>
