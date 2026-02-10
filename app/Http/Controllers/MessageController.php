@@ -54,4 +54,7 @@ class MessageController extends Controller
         return back() ; 
     }
 
+    public function allFreinds(){
+        
+    }
 }

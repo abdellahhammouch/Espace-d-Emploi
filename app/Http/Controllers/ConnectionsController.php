@@ -15,7 +15,7 @@ class ConnectionsController extends Controller
         $me = $request->user();
         $tab = $request->query('tab', 'friends'); // friends|pending|suggestions
         $q = trim((string) $request->query('q', ''));
-
+        
         $friendIds = Friendship::query()
             ->where('user_id', $me->id)
             ->pluck('friend_id');
