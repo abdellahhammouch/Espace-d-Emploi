@@ -77,6 +77,8 @@ Route::post('/connections/requests/{friendRequest}/decline', [ConnectionsControl
 
 Route::middleware('auth')->group(function () {
     Route::get('/conversation/{id}' , [MessageController::class , 'index']) -> name('conversation.affiche'); 
+    Route::post('/conversation/message/send' , [MessageController::class , 'create']) -> name('message.send'); 
+
 });
 
 

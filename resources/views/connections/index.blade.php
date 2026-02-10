@@ -72,7 +72,7 @@
 
                         <a href="{{ route('conversation.affiche', $u->id) }}"
                             class="mt-4 h-10 w-full rounded-xl bg-primary text-white font-extrabold flex items-center justify-center hover:opacity-95">
-                            View Profile
+                            Message
                         </a>
                     </div>
                 @empty
