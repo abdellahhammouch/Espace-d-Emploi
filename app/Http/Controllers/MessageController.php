@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -45,12 +46,16 @@ class MessageController extends Controller
             return back()->with('error' , 'no msg for your self') ; 
         }
 
-        Message::create([
+        $message = Message::create([
             'sender_id' => Auth::id() , 
             'receiver_id' => $request -> receiver_id , 
             'content' => $request -> input('content') , 
         ]);
 
+        
+        broadcast(new MessageSent($message)) ; 
+        
+        // dd('EVENT SHOULD FIRE NOW' ,  $message);
         return back() ; 
     }
 

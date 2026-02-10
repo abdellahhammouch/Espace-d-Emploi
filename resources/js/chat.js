@@ -1,22 +1,14 @@
-import './bootstrap';
-import Alpine from 'alpinejs';
-
-window.Alpine = Alpine;
-
-Alpine.start();
-
 const authUserId = document.querySelector('#userID').dataset.id ;
 const receiverId = document.querySelector('#receiverID').dataset.id ;
 console.log(authUserId, receiverId);
 
 
 const container = document.getElementById("messages-container");
-
 if (container) {
     container.scrollTop = container.scrollHeight;
 }
 
-window.Echo.private(`chat.user.${authUserId}`).listen("MessageSent", (e) => {
+Echo.private(`chat.user.${authUserId}`).listen("MessageSent", (e) => {
     console.log("New message:", e);
     console.log("hebebe f chebi ");
 
