@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MessageController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserSearchController;
 use App\Http\Controllers\ProfileController;
@@ -73,6 +74,10 @@ Route::get('/connections', [ConnectionsController::class, 'index'])->name('conne
 Route::post('/connections/{user}/request', [ConnectionsController::class, 'send'])->name('connections.request');
 Route::post('/connections/requests/{friendRequest}/accept', [ConnectionsController::class, 'accept'])->name('connections.accept');
 Route::post('/connections/requests/{friendRequest}/decline', [ConnectionsController::class, 'decline'])->name('connections.decline');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/conversation/{id}' , [MessageController::class , 'index']) -> name('conversation.affiche'); 
+});
 
 
 Route::post('offers/{offer}/like', [OfferLikeController::class, 'toggle'])
