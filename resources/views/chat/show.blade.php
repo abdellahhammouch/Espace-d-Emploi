@@ -1,23 +1,27 @@
 <x-app-layout>
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg h-[600px] flex flex-col">
-                
-                <div class="bg-blue-600 p-4 text-gray-800 font-bold text-lg flex items-center shadow-md">
-                   <span>Discussion {{ $receiver->name }}</span>
+    <div class="py-10">
+        <div class="max-w-5xl mx-auto px-4">
+
+            <div class="bg-white shadow-lg rounded-xl h-[650px] flex flex-col overflow-hidden">
+
+                <!-- Header -->
+                <div class="bg-blue-600 text-gray-800 px-6 py-4 font-semibold text-lg flex items-center">
+                    Discussion with {{ $receiver->name }}
                 </div>
 
-                <div class="flex-1 p-4 overflow-y-auto bg-gray-50 space-y-4" id="messages-container">
-                    
+                <!-- Messages -->
+                <div id="messages-container"
+                     class="flex-1 overflow-y-auto px-6 py-4 space-y-3 bg-gray-100">
+
                     @foreach($messages as $message)
-                        
-                        @if($message->sender_id == auth()->id())
-                            
+
+                        @if($message->sender_id === auth()->id())
+
+                            <!-- My message -->
                             <div class="flex justify-end">
-                                <div class="bg-blue-500 text-white max-w-[70%] rounded-l-lg rounded-br-lg p-3 shadow">
-                                    <p class="text-sm">{{ $message->content }}</p>
-                                    <span class="text-xs text-blue-100 block text-right mt-1">
+                                <div class="bg-white text-gray-800 max-w-[65%] px-4 py-2 rounded-2xl rounded-bl-sm shadow border">
+                                    <p class="text-sm break-words">{{ $message->content }}</p>
+                                    <span class="text-[11px] text-gray-500 block mt-1">
                                         {{ $message->created_at->format('H:i') }}
                                     </span>
                                 </div>
@@ -25,10 +29,11 @@
 
                         @else
 
+                            <!-- Receiver message -->
                             <div class="flex justify-start">
-                                <div class="bg-white text-gray-800 max-w-[70%] rounded-r-lg rounded-bl-lg p-3 shadow border border-gray-200">
-                                    <p class="text-sm">{{ $message->content }}</p>
-                                    <span class="text-xs text-gray-500 block text-left mt-1">
+                                <div class="bg-white text-gray-800 max-w-[65%] px-4 py-2 rounded-2xl rounded-bl-sm shadow border">
+                                    <p class="text-sm break-words">{{ $message->content }}</p>
+                                    <span class="text-[11px] text-gray-500 block mt-1">
                                         {{ $message->created_at->format('H:i') }}
                                     </span>
                                 </div>
@@ -40,20 +45,26 @@
 
                 </div>
 
-                <div class="p-4 bg-gray-100 border-t border-gray-200">
-                    <form action="{{ route('message.send') }}" method="POST" class="flex gap-2">
+                <!-- Input -->
+                <div class="border-t px-4 py-3">
+                    <form action="{{ route('message.send') }}" method="POST" class="flex gap-3">
                         @csrf
                         <input type="hidden" name="receiver_id" value="{{ $receiver->id }}">
-                        
-                        <input type="text" 
-                               name="content" 
-                               class="flex-1 border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                               placeholder="Kteb message..." 
-                               required>
-                        
-                        <button type="submit" class=" hover:bg-blue-700 bg-black text-white px-6 py-2 rounded-lg font-medium transition">
-                            Sent
+
+                        <input
+                            type="text"
+                            name="content"
+                            placeholder="Write your message..."
+                            class="flex-1 rounded-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 px-4"
+                            required
+                        >
+
+                        <button
+                            type="submit"
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-6 rounded-full font-medium transition">
+                            Send
                         </button>
+
                     </form>
                 </div>
 
@@ -63,7 +74,7 @@
 
     <script>
         const container = document.getElementById('messages-container');
-        if(container) {
+        if (container) {
             container.scrollTop = container.scrollHeight;
         }
     </script>
