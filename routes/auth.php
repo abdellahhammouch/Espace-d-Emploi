@@ -33,6 +33,9 @@ Route::middleware('guest')->group(function () {
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.store');
+    Route::get('auth/{provider}/redirect', [SocialAuthController::class, 'redirect'])->name('social.redirect');
+    Route::get('auth/{provider}/callback', [SocialAuthController::class, 'callback'])->name('social.callback');
+
 });
 
 Route::middleware('auth')->group(function () {
@@ -56,4 +59,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+    Route::get('onboarding/role', [SocialOnboardingController::class, 'create'])->name('onboarding.role');
+    Route::post('onboarding/role', [SocialOnboardingController::class, 'store'])->name('onboarding.role.store');
+
 });
