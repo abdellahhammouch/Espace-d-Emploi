@@ -12,25 +12,32 @@ use Laravel\Socialite\Facades\Socialite;
 
 class SocialAuthController extends Controller
 {
-    public function redirect(string $provider): RedirectResponse
+    public function redirect(string $provider)
     {
-        if (!in_array($provider, ['google', 'facebook'], true)) {
+        if (!in_array($provider, ['google', 'github'], true)) {
             abort(404);
         }
 
         $driver = Socialite::driver($provider);
 
-        if ($provider === 'facebook') {
+        /*if ($provider === 'facebook') {
             $driver = $driver->scopes(['email']);
-        }
+        }*/
 
         return $driver->redirect();
     }
 
-    public function callback(string $provider): RedirectResponse
+    public function callback(string $provider)
     {
-        if (!in_array($provider, ['google', 'facebook'], true)) {
+        if (!in_array($provider, ['google', 'github'], true)) {
             abort(404);
+        }
+        if (request()->has('error')) {
+            return redirect()
+                ->route('login')
+                ->withErrors([
+                    'oauth' => request()->get('error_description') ?? 'Authentication cancelled.',
+                ]);
         }
 
         $providerUser = Socialite::driver($provider)->stateless()->user();
@@ -58,6 +65,9 @@ class SocialAuthController extends Controller
             if ($updates) $user->update($updates);
 
             Auth::login($user, true);
+            if (!$user->hasRole('employee') && !$user->hasRole('recruiter')) {
+                return redirect()->route('onboarding.role');
+            }
             return redirect()->intended('/dashboard');
         }
 

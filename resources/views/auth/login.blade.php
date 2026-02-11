@@ -68,7 +68,7 @@
                     Sign In
                 </button>
             </form>
-            <div class="space-y-3">
+            <div class="space-y-3 mt-5">
                 {{-- Google --}}
                 <a href="{{ route('social.redirect', ['provider' => 'google']) }}"
                    class="w-full relative flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -79,13 +79,12 @@
                 </a>
 
                 {{-- Facebook --}}
-                <a href="{{ route('social.redirect', ['provider' => 'facebook']) }}"
+                <a href="{{ route('social.redirect', ['provider' => 'github']) }}"
                    class="w-full relative flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     <span class="absolute left-4 inline-flex items-center justify-center">
-                        {{-- Option 1: image depuis /public/icons/facebook.svg --}}
-                        <img src="{{ asset('icons/facebook.svg') }}" alt="Facebook" class="h-5 w-5">
+                        <img src="{{ asset('icons/github.svg') }}" alt="Github" class="h-5 w-5">
                     </span>
-                    <span>Continue with Facebook</span>
+                    <span>Continue with Github</span>
                 </a>
             </div>
             <div class="mt-10 pt-8 border-t border-slate-100 dark:border-slate-800 text-center">

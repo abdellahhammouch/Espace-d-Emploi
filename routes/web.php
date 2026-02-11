@@ -78,5 +78,16 @@ Route::post('/connections/requests/{friendRequest}/decline', [ConnectionsControl
 Route::post('offers/{offer}/like', [OfferLikeController::class, 'toggle'])
     ->name('offers.like');
 
+Route::get('/auth/{provider}/redirect', [SocialAuthController::class, 'redirect'])
+    ->name('social.redirect');
+
+Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'callback'])
+    ->name('social.callback');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/onboarding/role', [SocialOnboardingController::class, 'create'])->name('onboarding.role');
+    Route::post('/onboarding/role', [SocialOnboardingController::class, 'store'])->name('onboarding.role.store');
+});
+
 
 require __DIR__.'/auth.php';
