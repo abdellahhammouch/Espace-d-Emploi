@@ -45,8 +45,21 @@ class MessageController extends Controller
     {
         $request->validate([
             'content' => 'required | string |',
-            'receiver_id' => 'required | exists:users,id'
+            'receiver_id' => 'required | exists:users,id' , 
+            'attachment' => 'nullable | file | max:20480' , 
         ]);
+
+        $filepath = null ; 
+
+        if($request->hasFile('attachment'))
+        {
+            $file = $request->file('attachment') ;
+            
+            $filepath = $file->store('attachment' , 'public') ;
+
+            
+
+        }
 
         if ($request->receiver_id === Auth::id()) {
             return back()->with('error', 'no msg for your self');

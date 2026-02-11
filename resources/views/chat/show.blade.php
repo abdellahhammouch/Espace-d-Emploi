@@ -70,12 +70,10 @@
                         </div>
 
                         <div class="p-4 bg-white border-t border-slate-100">
-                            {{-- Added enctype for file uploads --}}
                             <form action="{{ route('message.send') }}" method="POST" enctype="multipart/form-data" class="flex flex-col gap-2">
                                 @csrf
                                 <input type="hidden" name="receiver_id" value="{{ $activeFriend->id ?? $receiver->id }}">
                                 
-                                {{-- Selection Preview (Hidden by default) --}}
                                 <div id="file-preview" class="hidden items-center gap-2 p-2 bg-indigo-50 rounded-xl border border-indigo-100">
                                     <span class="text-xs font-bold text-indigo-600 px-2" id="file-name"></span>
                                     <button type="button" onclick="clearFile()" class="text-red-500 hover:text-red-700">
