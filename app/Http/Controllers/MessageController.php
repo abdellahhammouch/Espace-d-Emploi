@@ -25,6 +25,7 @@ class MessageController extends Controller
             ->with('friend')
             ->get();
 
+        // dd($friends);
 
         $messages = Message::where(function ($query) use ($myId, $receiverId) {
             $query->where('sender_id', $myId)

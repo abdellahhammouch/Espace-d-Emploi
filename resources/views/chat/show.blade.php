@@ -19,7 +19,7 @@
 
                         <div class="flex-1 overflow-y-auto p-3 space-y-1">
                             @foreach($friends as $friend)
-                            <a href="{{ route('conversation.affiche', $friend->id) }}" class="flex items-center gap-3 p-3 rounded-2xl transition-all hover:bg-slate-50">
+                            <a href="{{ route('conversation.affiche', $friend->friend_id) }}" class="flex items-center gap-3 p-3 rounded-2xl transition-all hover:bg-slate-50">
                                 <div class="w-12 h-12 rounded-2xl bg-indigo-500 text-white flex items-center justify-center font-bold shadow-md"></div>
                                 <div class="min-w-0 flex-1">
                                     <p class="font-bold text-slate-700 truncate">{{$friend->friend->name}}</p>
