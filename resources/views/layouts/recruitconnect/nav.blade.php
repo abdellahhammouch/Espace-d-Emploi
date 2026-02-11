@@ -49,6 +49,10 @@
             </a>
         </nav>
 
+        @auth
+            <livewire:notification-dropdown />
+        @endauth
+
         <div class="h-8 w-px bg-slate-200 hidden md:block"></div>
 
         {{-- User --}}

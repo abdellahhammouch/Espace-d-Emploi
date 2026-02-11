@@ -17,7 +17,6 @@
 
 <body class="bg-background-light text-ink font-display">
     @include('layouts.recruitconnect.nav')
-
     <main class="max-w-[1200px] mx-auto px-4 md:px-10 lg:px-20 py-8">
         @php
             $status = session('status');

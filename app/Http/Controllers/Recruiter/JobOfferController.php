@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Recruiter;
 
+use App\Events\JobOfferCreated;
 use App\Http\Controllers\Controller;
 use App\Models\JobOffer;
 use App\Models\ContractType;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Notifications\NewJobOfferNotification;
 
 class JobOfferController extends Controller
 {
@@ -39,7 +42,7 @@ class JobOfferController extends Controller
 
         $path = $request->file('image')->store('job_offers', 'public');
 
-        JobOffer::create([
+        $jobOffer = JobOffer::create([
             'recruiter_id'     => auth()->id(),
             'contract_type_id' => $data['contract_type_id'],
             'title'            => $data['title'],
@@ -49,8 +52,14 @@ class JobOfferController extends Controller
             'image_path'       => $path,
         ]);
 
-        return redirect()->route('recruiter.offers.index')->with('status', 'offer-created');
+        event(new JobOfferCreated($jobOffer));
+
+
+        return redirect()
+            ->route('recruiter.offers.index')
+            ->with('status', 'offer-created');
     }
+
 
     public function edit(JobOffer $offer)
     {
