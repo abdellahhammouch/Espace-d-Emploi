@@ -23,6 +23,7 @@ function appendMessage(message) {
     const wrapper = document.createElement("div");
     wrapper.className = isMine ? "flex justify-end" : "flex justify-start";
 
+    
     wrapper.innerHTML = `
             <div class="bg-white text-gray-800 max-w-[65%] px-4 py-2 rounded-2xl shadow border">
                 <p class="text-sm break-words">${message.content}</p>

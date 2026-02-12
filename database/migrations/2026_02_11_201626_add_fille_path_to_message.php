@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('messages', function (Blueprint $table) {
+        Schema::table('messages', callback: function (Blueprint $table) {
             $table -> string('file_path')->nullable() ;
         });
     }

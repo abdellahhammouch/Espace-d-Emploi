@@ -8,6 +8,7 @@ use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use function Livewire\of;
 
 
 
@@ -46,10 +47,11 @@ class MessageController extends Controller
         $request->validate([
             'content' => 'required | string |',
             'receiver_id' => 'required | exists:users,id' , 
-            'attachment' => 'nullable | file | max:20480' , 
+            'attachment' => 'nullable | mimes:jpg,png,mp4,pdf | max:20480' , 
         ]);
 
         $filepath = null ; 
+        $typeFile = 'text';
 
         if($request->hasFile('attachment'))
         {
@@ -57,7 +59,20 @@ class MessageController extends Controller
             
             $filepath = $file->store('attachment' , 'public') ;
 
-            
+            $mime = $file->getMimeType();
+
+            if(str_starts_with($mime , 'image/')) 
+            {
+                $typeFile = 'image' ;
+            }else if(str_starts_with($mime , 'video/'))
+            {
+                $typeFile = 'video' ; 
+            }else
+            {
+                $typeFile = 'file' ; 
+            }
+
+
 
         }
 
@@ -69,7 +84,10 @@ class MessageController extends Controller
             'sender_id' => Auth::id(),
             'receiver_id' => $request->receiver_id,
             'content' => $request->input('content'),
+            'type' => $typeFile , 
+            'file_path' => $filepath , 
         ]);
+
 
 
         broadcast(new MessageSent($message));
