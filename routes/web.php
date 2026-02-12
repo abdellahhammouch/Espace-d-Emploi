@@ -7,15 +7,13 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ExperienceController;
 use App\Http\Controllers\EducationController;
 use App\Http\Controllers\OfferController;
+use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\Recruiter\JobOfferController as RecruiterJobOfferController;
 use App\Http\Controllers\ConnectionsController;
 use App\Http\Controllers\OfferLikeController;
-
-
-
-
+use App\Http\Controllers\StripeWebhookController;
 
 
 Route::get('/', function () {
@@ -77,6 +75,20 @@ Route::post('/connections/requests/{friendRequest}/decline', [ConnectionsControl
 
 Route::post('offers/{offer}/like', [OfferLikeController::class, 'toggle'])
     ->name('offers.like');
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/verify/checkout', [VerificationController::class, 'checkout'])
+        ->name('verification.checkout');
+
+    Route::get('/verify/success', [VerificationController::class, 'success'])
+        ->name('verification.success');
+
+    Route::get('/verify/cancel', [VerificationController::class, 'cancel'])
+        ->name('verification.cancel');
+});
+
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook']);
+
 
 
 require __DIR__.'/auth.php';
