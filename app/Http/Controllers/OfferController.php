@@ -5,17 +5,66 @@ namespace App\Http\Controllers;
 use App\Models\JobOffer;
 use App\Models\ContractType;
 use Illuminate\Http\Request;
+    use Illuminate\Support\Facades\Cache;
 
 class OfferController extends Controller
 {
-    public function index(Request $request)
-    {
-        $q = $request->string('q')->toString();
-        $contractTypeId = $request->integer('contract_type_id');
+    // public function index(Request $request)
+    // {
+    //     $q = $request->string('q')->toString();
+    //     $contractTypeId = $request->integer('contract_type_id');
 
-        $offers = JobOffer::query()
+    //     $offers = JobOffer::query()
+    //         ->with(['recruiter.recruiterProfile', 'contractType'])
+    //         ->where('is_closed', false)
+    //         ->when($q, function ($query) use ($q) {
+    //             $query->where(function ($sub) use ($q) {
+    //                 $sub->where('title', 'ilike', "%{$q}%")
+    //                     ->orWhere('place', 'ilike', "%{$q}%")
+    //                     ->orWhere('description', 'ilike', "%{$q}%");
+    //             });
+    //         })
+    //         ->when($contractTypeId, fn($query) => $query->where('contract_type_id', $contractTypeId))
+    //         ->latest()
+    //         ->paginate(9)
+    //         ->withQueryString();
+
+    //     $contractTypes = ContractType::query()->orderBy('name')->get();
+    //     $me = auth()->id();
+
+    //     $offers = \App\Models\JobOffer::query()
+    //         ->with(['recruiter.recruiterProfile', 'contractType'])
+    //         ->withCount('likes')
+    //         ->withExists([
+    //             'likes as liked_by_me' => fn ($q) => $q->where('user_id', $me),
+    //             'applications as applied_by_me' => fn ($q) => $q->where('employee_id', $me),
+    //         ])
+    //         ->where('is_closed', false)
+    //         ->latest()
+    //         ->get();
+
+    //     return view('offers.index', compact('offers', 'contractTypes', 'q', 'contractTypeId'));
+    // }
+
+
+public function index(Request $request)
+{
+    $q = $request->string('q')->toString();
+    $contractTypeId = $request->integer('contract_type_id');
+    $me = auth()->id();
+
+    // Create a unique cache key based on filters and user
+    $cacheKey = "offers.user_{$me}.q_{$q}.contract_{$contractTypeId}";
+
+    // Cache for 5 minutes (300 seconds)
+    $offers = Cache::remember($cacheKey, 300, function () use ($q, $contractTypeId, $me) {
+        return JobOffer::query()
             ->with(['recruiter.recruiterProfile', 'contractType'])
-            ->where('is_closed', false)
+            ->withCount('likes')
+            ->withExists([
+                'likes as liked_by_me' => fn ($q) => $q->where('user_id', $me),
+                'applications as applied_by_me' => fn ($q) => $q->where('employee_id', $me),
+            ])
             ->when($q, function ($query) use ($q) {
                 $query->where(function ($sub) use ($q) {
                     $sub->where('title', 'ilike', "%{$q}%")
@@ -27,23 +76,13 @@ class OfferController extends Controller
             ->latest()
             ->paginate(9)
             ->withQueryString();
+    });
 
-        $contractTypes = ContractType::query()->orderBy('name')->get();
-        $me = auth()->id();
+    $contractTypes = Cache::remember('contract_types', 3600, fn() => ContractType::orderBy('name')->get());
 
-        $offers = \App\Models\JobOffer::query()
-            ->with(['recruiter.recruiterProfile', 'contractType'])
-            ->withCount('likes')
-            ->withExists([
-                'likes as liked_by_me' => fn ($q) => $q->where('user_id', $me),
-                'applications as applied_by_me' => fn ($q) => $q->where('employee_id', $me),
-            ])
-            ->where('is_closed', false)
-            ->latest()
-            ->get();
+    return view('offers.index', compact('offers', 'contractTypes', 'q', 'contractTypeId'));
+}
 
-        return view('offers.index', compact('offers', 'contractTypes', 'q', 'contractTypeId'));
-    }
 
     public function show(JobOffer $offer)
     {
