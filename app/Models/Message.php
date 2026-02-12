@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Message extends Model
 {
-    protected $fillable = ['sender_id' , 'receiver_id' , 'content' , ] ;
+    protected $fillable = ['sender_id' , 'receiver_id' , 'content' , 'type' , 'file_path' , ] ;
 
 
     public function sender(): BelongsToMany     

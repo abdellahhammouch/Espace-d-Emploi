@@ -39,40 +39,39 @@ class MessageController extends Controller
             ->orderBy('created_at', 'asc')
             ->get();
 
+        // dd($messages) ; 
+
         return view('chat.show', compact('messages', 'friends', 'receiver'));
     }
 
     public function create(Request $request)
     {
         $request->validate([
-            'content' => 'required | string |',
-            'receiver_id' => 'required | exists:users,id' , 
-            'attachment' => 'nullable | mimes:jpg,png,mp4,pdf | max:20480' , 
+            'content' => 'nullable | string |',
+            'receiver_id' => 'required | exists:users,id',
+            'attachment' => 'nullable | max:20480',
         ]);
 
-        $filepath = null ; 
+        $filepath = null;
         $typeFile = 'text';
+        
+        if ($request->hasFile('attachment')) {
+            // dd($request->all() , $request -> hasFile('attachment')) ;
+            $file = $request->file('attachment');
 
-        if($request->hasFile('attachment'))
-        {
-            $file = $request->file('attachment') ;
+            $filepath = $file->store('attachment', 'public');
             
-            $filepath = $file->store('attachment' , 'public') ;
+            $filepath = basename($filepath) ; 
 
             $mime = $file->getMimeType();
 
-            if(str_starts_with($mime , 'image/')) 
-            {
-                $typeFile = 'image' ;
-            }else if(str_starts_with($mime , 'video/'))
-            {
-                $typeFile = 'video' ; 
-            }else
-            {
-                $typeFile = 'file' ; 
+            if (str_starts_with($mime, 'image/')) {
+                $typeFile = 'image';
+            } else if (str_starts_with($mime, 'video/')) {
+                $typeFile = 'video';
+            } else {
+                $typeFile = 'file';
             }
-
-
 
         }
 
@@ -84,17 +83,19 @@ class MessageController extends Controller
             'sender_id' => Auth::id(),
             'receiver_id' => $request->receiver_id,
             'content' => $request->input('content'),
-            'type' => $typeFile , 
-            'file_path' => $filepath , 
+            'type' => $typeFile,
+            'file_path' => $filepath,
         ]);
-
-
+        
+        
+        // dd($message);
 
         broadcast(new MessageSent($message));
 
-        // dd('EVENT SHOULD FIRE NOW' ,  $message);
         return back();
     }
 
-    public function allFreinds() {}
+    public function allFreinds()
+    {
+    }
 }

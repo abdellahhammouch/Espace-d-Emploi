@@ -13,7 +13,7 @@ window.Echo = new Echo({
     enabledTransports: ['ws', 'wss'],
 });
 
-window.Echo.connector.pusher.connection.bind('connected', () => {
-    console.log('✅ WS CONNECTED');
-});
+// window.Echo.connector.pusher.connection.bind('connected', () => {
+//     console.log('✅ WS CONNECTED');
+// });
 
