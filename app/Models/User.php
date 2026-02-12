@@ -22,7 +22,14 @@ class User extends Authenticatable
         'password',
         'bio',
         'avatar_path',
+        'verification_expires_at',
+        'is_verified'
     ];
+
+    protected $casts = [
+    'verification_expires_at' => 'datetime',
+];
+
 
     protected $hidden = [
         'password',
@@ -75,4 +82,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(\App\Models\OfferLike::class);
     }
+
+    public function isCurrentlyVerified(): bool
+{
+    return $this->is_verified
+        && $this->verification_expires_at
+        && $this->verification_expires_at->isFuture();
+}
+
 }

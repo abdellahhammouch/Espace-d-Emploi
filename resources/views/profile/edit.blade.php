@@ -108,12 +108,12 @@ $roleText = $isRecruiter ? 'Verified Recruiter' : 'Candidate';
                         <div>
                             <h3 class="text-lg font-bold flex items-center gap-2">
                                 Account Verification
-                                @if($user->is_verified)
+                                @if($user->isCurrentlyVerified())
                                 <span class="material-symbols-outlined text-[#137fec]">verified</span>
                                 @endif
                             </h3>
 
-                            @if($user->is_verified)
+                            @if($user->isCurrentlyVerified())
                             <p class="text-sm text-green-700 mt-1">
                                 Your account is verified. This badge increases your credibility.
                             </p>
@@ -125,7 +125,7 @@ $roleText = $isRecruiter ? 'Verified Recruiter' : 'Candidate';
                         </div>
 
                         {{-- STATUS BADGE --}}
-                        @if($user->is_verified)
+                        @if($user->isCurrentlyVerified())
                         <span class="px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">
                             Verified
                         </span>
@@ -137,7 +137,7 @@ $roleText = $isRecruiter ? 'Verified Recruiter' : 'Candidate';
                     </div>
 
                     {{-- ACTION --}}
-                    @if(!$user->is_verified)
+                    @if(!$user->isCurrentlyVerified())
                     <form method="POST" action="{{ route('verification.checkout') }}" class="mt-4">
                         @csrf
                         <button

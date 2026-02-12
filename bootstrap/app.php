@@ -14,7 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->validateCsrfTokens(except: [
-            'stripe/*', // This covers all routes starting with /stripe/
+            'stripe/*',
         ]);
 
         $middleware->alias([
